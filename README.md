@@ -2,7 +2,7 @@
 
 *If you're from O'Shaughnessy Ventures — I left something for you here.*
 
-(Check out LOG.md for live updates and SESSIONMETHODOLOGY.md)
+(Check out LOG.md for live updates and SESSION_METHODOLOGY.md)
 
 ---
 
