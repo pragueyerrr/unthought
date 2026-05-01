@@ -1,4 +1,4 @@
-# Unthought
+# Unthought -- https:/unthought.io
 
 *If you're from O'Shaughnessy Ventures — I left something for you here.*
 
