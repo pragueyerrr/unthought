@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unthought</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0e0e0c;
+    --paper: #f5f2eb;
+    --dim: #6b6860;
+    --dimmer: #9e9b94;
+    --accent: #2a2a26;
+    --rule: rgba(14,14,12,0.12);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* --- NOISE TEXTURE OVERLAY --- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* --- LAYOUT --- */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* --- NAV --- */
+  nav {
+    padding: 2.5rem 0 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.1s;
+  }
+
+  nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .wordmark {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-right {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--dimmer);
+    letter-spacing: 0.08em;
+  }
+
+  /* --- HERO --- */
+  .hero {
+    padding: 8rem 0 5rem;
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards;
+    animation-delay: 0.3s;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.5s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .hero-body {
+    font-size: 1.25rem;
+    line-height: 1.75;
+    color: var(--dim);
+    max-width: 580px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.7s;
+  }
+
+  .hero-body p + p {
+    margin-top: 1.25rem;
+  }
+
+  /* --- RULE --- */
+  .rule {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 5rem 0;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+    animation-delay: 1s;
+  }
+
+  /* --- SECTION --- */
+  section {
+    padding: 0 0 5rem;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dimmer);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .section-heading {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.75rem;
+  }
+
+  .section-heading em { font-style: italic; }
+
+  .body-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--dim);
+  }
+
+  .body-text p + p {
+    margin-top: 1.25rem;
+  }
+
+  /* --- PULL QUOTE --- */
+  .pull-quote {
+    border-left: 1px solid var(--ink);
+    padding-left: 2rem;
+    margin: 3rem 0;
+    font-size: clamp(1.3rem, 3vw, 1.75rem);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  /* --- OPEN QUESTIONS --- */
+  .questions-grid {
+    display: grid;
+    gap: 0;
+    margin-top: 1.5rem;
+  }
+
+  .question-item {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .question-item:first-child { border-top: 1px solid var(--rule); }
+
+  .q-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--dimmer);
+    padding-top: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+
+  .q-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--dim);
+  }
+
+  .q-text strong {
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  /* --- LOOKING FOR --- */
+  .looking-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-top: 1.5rem;
+  }
+
+  .looking-item {
+    background: var(--paper);
+    padding: 1.25rem 1.5rem;
+  }
+
+  .looking-domain {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--dimmer);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .looking-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--dim);
+  }
+
+  /* --- CONTACT FORM --- */
+  .form-section {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 5rem 0;
+    margin-top: 2rem;
+  }
+
+  .form-section .section-label {
+    color: rgba(245,242,235,0.35);
+  }
+
+  .form-section .section-label::after {
+    background: rgba(245,242,235,0.1);
+  }
+
+  .form-section .section-heading {
+    color: var(--paper);
+  }
+
+  .form-section .body-text {
+    color: rgba(245,242,235,0.55);
+  }
+
+  form {
+    margin-top: 3rem;
+    display: grid;
+    gap: 2rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(245,242,235,0.4);
+  }
+
+  input, textarea, select {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(245,242,235,0.2);
+    color: var(--paper);
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 300;
+    padding: 0.75rem 0;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(245,242,235,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    padding-right: 2rem;
+  }
+
+  select option {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: rgba(245,242,235,0.2);
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-bottom-color: rgba(245,242,235,0.6);
+  }
+
+  textarea {
+    resize: none;
+    min-height: 120px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .submit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+  }
+
+  .submit-note {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: rgba(245,242,235,0.25);
+    letter-spacing: 0.05em;
+  }
+
+  button[type="submit"] {
+    background: transparent;
+    border: 1px solid rgba(245,242,235,0.3);
+    color: var(--paper);
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    padding: 0.85rem 2.5rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--paper);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 0;
+  }
+
+  button[type="submit"]:hover::before {
+    transform: translateX(0);
+  }
+
+  button[type="submit"]:hover {
+    color: var(--ink);
+    border-color: var(--paper);
+  }
+
+  button[type="submit"] span {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* --- SUCCESS STATE --- */
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 4rem 0;
+  }
+
+  .form-success.visible { display: block; }
+
+  .form-success-icon {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.4;
+  }
+
+  .form-success h3 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--paper);
+    margin-bottom: 0.75rem;
+  }
+
+  .form-success p {
+    font-size: 0.95rem;
+    color: rgba(245,242,235,0.45);
+  }
+
+  /* --- FOOTER --- */
+  footer {
+    padding: 3rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--dimmer);
+    letter-spacing: 0.08em;
+  }
+
+  .footer-right {
+    font-size: 0.9rem;
+    color: var(--dimmer);
+  }
+
+  .footer-right a {
+    color: var(--dimmer);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-right a:hover { color: var(--ink); }
+
+  /* --- SCROLL REVEALS --- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* --- ANIMATIONS --- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; }
+    .looking-grid { grid-template-columns: 1fr; }
+    .submit-row { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    footer .container { flex-direction: column; gap: 1rem; align-items: flex-start; }
+    .hero { padding: 5rem 0 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <a class="wordmark" href="#">Unthought</a>
+    <span class="nav-right">Dubai, 2025–</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <p class="hero-label">A participatory data project</p>
+    <h1 class="hero-title">
+      The self that acts<br>
+      <em>before the self<br>that performs.</em>
+    </h1>
+    <div class="hero-body">
+      <p>We are a tapestry made of all the routes we take without thinking. Not the destinations we choose — the paths the body takes while the mind is elsewhere.</p>
+      <p>Unthought collects those paths. It layers them. It renders them as terrain.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- THE IDEA -->
+<section>
+  <div class="container">
+    <p class="section-label reveal">The idea</p>
+    <h2 class="section-heading reveal">What becomes visible<br>when you <em>layer enough<br>individual choices</em> on top of each other.</h2>
+    <div class="body-text reveal">
+      <p>Every week, participants trace their unreflective daily routes from memory — the paths taken through cities without registering that a choice was being made. These routes are layered on top of each other into collective physical terrain.</p>
+      <p>Mountains form where everyone turns left without thinking. Valleys appear where the road nobody takes runs quietly through. A ridge emerges where two different kinds of people make the same choice for completely different reasons.</p>
+    </div>
+
+    <div class="pull-quote reveal">
+      Route terrain. The city, and the self, revealed through accumulation.
+    </div>
+
+    <div class="body-text reveal">
+      <p>This is not a map of where people go. It is a map of what they do without deciding to — the prereflective self, rendered as landscape. The gap between the pins.</p>
+      <p>Participants also document a constraint they navigate regularly without fully acknowledging it. The building they avoid without knowing why. The side of the street they always take. The turn they never make. This is the philosophically rich data point: the structure that shapes movement before the question of movement is ever consciously raised.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ORIGIN -->
+<section>
+  <div class="container">
+    <p class="section-label reveal">Where it came from</p>
+    <h2 class="section-heading reveal"><em>Freshman year.<br>Manhattan.</em><br>A walk home.</h2>
+    <div class="body-text reveal">
+      <p>She navigated the grid entirely by availability. Every time a signal turned green around her, she moved in that direction while traveling toward the general destination. No fixed route. Just direction and total responsiveness to what was open in the moment.</p>
+      <p>I had been taking the exact same turns every single day for a week without once registering that I was making a choice. Same sequence, same timing, same turns.</p>
+      <p>She was mycelial. I was linear. I saw the difference instantly.</p>
+      <p>That observation never resolved. It sat for eleven years, gathering context. It arrived here.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- OPEN QUESTIONS -->
+<section>
+  <div class="container">
+    <p class="section-label reveal">Open questions</p>
+    <h2 class="section-heading reveal">What is still<br><em>genuinely unsolved.</em></h2>
+    <div class="body-text reveal">
+      <p>These are not placeholders. They are the actual load-bearing problems. If you have expertise in any of these, this page is for you.</p>
+    </div>
+    <div class="questions-grid reveal">
+      <div class="question-item">
+        <span class="q-num">01</span>
+        <span class="q-text"><strong>The paper-to-coordinate problem.</strong> A participant draws a route from memory on paper. How does that become usable geospatial data? Each method trades phenomenological honesty for technical precision differently.</span>
+      </div>
+      <div class="question-item">
+        <span class="q-num">02</span>
+        <span class="q-text"><strong>The car city question.</strong> Dubai is a car city. Most participants will trace routes driven, not walked. Car routes from memory are landmark-based, not street-based. This may not be the same kind of Unthought. Or it may be the more interesting kind.</span>
+      </div>
+      <div class="question-item">
+        <span class="q-num">03</span>
+        <span class="q-text"><strong>The constraint question.</strong> How do you create session conditions where an honest answer to "what constraint do you navigate without acknowledging" is actually possible? What does the room need to feel like?</span>
+      </div>
+      <div class="question-item">
+        <span class="q-num">04</span>
+        <span class="q-text"><strong>The AI layer.</strong> There is a live possibility that the visualization and analysis becomes primarily AI-leveraged. What that looks like precisely is still forming.</span>
+      </div>
+      <div class="question-item">
+        <span class="q-num">05</span>
+        <span class="q-text"><strong>Longitudinal vs. cross-sectional.</strong> One route per person once, or the same person's route over weeks and months? Longitudinal captures drift — the way habitual paths shift with seasons, relationships, mood. It is also significantly harder.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- LOOKING FOR -->
+<section>
+  <div class="container">
+    <p class="section-label reveal">Looking for</p>
+    <h2 class="section-heading reveal">People who have been<br><em>thinking about this</em><br>from another direction.</h2>
+    <div class="looking-grid reveal">
+      <div class="looking-item">
+        <p class="looking-domain">Geospatial</p>
+        <p class="looking-desc">Data processing, the paper-to-coordinate problem specifically</p>
+      </div>
+      <div class="looking-item">
+        <p class="looking-domain">Installation</p>
+        <p class="looking-desc">Large-scale physical fabrication, sculptural terrain</p>
+      </div>
+      <div class="looking-item">
+        <p class="looking-domain">Philosophy</p>
+        <p class="looking-desc">Phenomenology, prereflective consciousness, Merleau-Ponty adjacent research</p>
+      </div>
+      <div class="looking-item">
+        <p class="looking-domain">Urban data</p>
+        <p class="looking-desc">Movement through cities, wayfinding, collective behavior</p>
+      </div>
+      <div class="looking-item">
+        <p class="looking-domain">AI visualization</p>
+        <p class="looking-desc">Making large bodies of behavioral data spatially navigable</p>
+      </div>
+      <div class="looking-item">
+        <p class="looking-domain">Participation</p>
+        <p class="looking-desc">Or simply someone who has spent time thinking about the self that exists before the performing self</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="form-section">
+  <div class="container">
+    <p class="section-label">Get in touch</p>
+    <h2 class="section-heading">If this is your<br><em>conversation too.</em></h2>
+    <div class="body-text">
+      <p>This project is still forming. The right people find it early.</p>
+    </div>
+
+    <form id="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="angle">What draws you here</label>
+        <select id="angle" name="angle" required>
+          <option value="" disabled selected>Select the closest fit</option>
+          <option value="geospatial">Geospatial / data expertise</option>
+          <option value="installation">Physical installation / fabrication</option>
+          <option value="philosophy">Philosophy / phenomenology</option>
+          <option value="urban">Urban data / city systems</option>
+          <option value="ai">AI / visualization</option>
+          <option value="participant">I want to participate in a session</option>
+          <option value="thinking">I've been thinking about this from another direction</option>
+          <option value="other">Something else entirely</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="message">Your message</label>
+        <textarea id="message" name="message" placeholder="What you're thinking, what you're working on, what you want to ask." required></textarea>
+      </div>
+
+      <div class="submit-row">
+        <span class="submit-note">Pragya G — Dubai</span>
+        <button type="submit"><span>Send</span></button>
+      </div>
+    </form>
+
+    <div class="form-success" id="form-success">
+      <div class="form-success-icon">—</div>
+      <h3>Received.</h3>
+      <p>Thank you. I read everything and reply to what I can.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <span class="footer-left">Unthought &nbsp;·&nbsp; 2025</span>
+    <div class="footer-right">
+      <a href="https://github.com/pragueyerrr/unthought" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('contact-form');
+    const btn = form.querySelector('button[type="submit"]');
+    const data = new FormData(form);
+
+    btn.disabled = true;
+    btn.querySelector('span').textContent = 'Sending…';
+
+    try {
+      const res = await fetch('https://formspree.io/f/REPLACE_WITH_YOUR_FORMSPREE_ID', {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        form.style.display = 'none';
+        document.getElementById('form-success').classList.add('visible');
+      } else {
+        const json = await res.json();
+        const msg = json.errors ? json.errors.map(e => e.message).join(', ') : 'Something went wrong. Please try again.';
+        btn.querySelector('span').textContent = msg;
+        btn.disabled = false;
+      }
+    } catch {
+      btn.querySelector('span').textContent = 'Network error. Please try again.';
+      btn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
