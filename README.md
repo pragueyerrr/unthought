@@ -2,6 +2,8 @@
 
 *If you're from O'Shaughnessy Ventures — I left something for you here.*
 
+(Check out LOG.md for live updates)
+
 ---
 
 ## What This Is
